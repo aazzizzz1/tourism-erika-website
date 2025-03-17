@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import customMarker from "../Data/mapssvg.svg"; // added import
@@ -9,12 +9,12 @@ const Maps = () => {
   const [filterText, setFilterText] = useState("");
   const [markersLayer, setMarkersLayer] = useState(null);
 
-  // Define a custom icon using mapssvg
-  const customIcon = L.icon({
+  // Define a custom icon using mapssvg, memoized with useMemo
+  const customIcon = useMemo(() => L.icon({
     iconUrl: customMarker,
     iconSize: [30, 30],
     iconAnchor: [15, 30],
-  });
+  }), []);
 
   useEffect(() => {
     fetch("/data.json")
@@ -65,7 +65,7 @@ const Maps = () => {
         }
       });
     }
-  }, [map, markersLayer, data, filterText]);
+  }, [map, markersLayer, data, filterText, customIcon]);
 
   useEffect(() => {
     return () => {
